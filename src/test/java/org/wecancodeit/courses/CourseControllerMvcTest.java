@@ -47,6 +47,8 @@ public class CourseControllerMvcTest {
 
     @Test
     public void shouldBeOkForOneCourseInTheCourseTemplate() throws Exception {
+        Long courseOneId = 1L;
+        when(courseRepo.findOne(courseOneId)).thenReturn(courseOne);
         mockMvc.perform(get("/course?id=1")).andExpect(status().isOk())
                 .andExpect(view().name("courseTemplate"));
     }
@@ -57,5 +59,12 @@ public class CourseControllerMvcTest {
         when(courseRepo.findOne(courseOneId)).thenReturn(courseOne);
         mockMvc.perform(get("/course?id=1"))
                 .andExpect(model().attribute("courseModel", courseOne));
+    }
+
+    @Test
+    public void shouldBeNotFoundForRequestNotInModel() throws Exception {
+        Long courseTwoId = 2L;
+        when(courseRepo.findOne(courseTwoId)).thenReturn(courseTwo);
+        mockMvc.perform(get("/course?id=3")).andExpect(status().isNotFound());
     }
 }
